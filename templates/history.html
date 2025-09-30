@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submission History - Copilot Demo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <style>
+        .history-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .navigation {
+            margin-bottom: 2rem;
+        }
+        
+        .nav-link {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            margin-right: 1rem;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .clear-btn {
+            background: rgba(239, 68, 68, 0.8);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .clear-btn:hover {
+            background: rgba(239, 68, 68, 1);
+            transform: translateY(-2px);
+        }
+        
+        .clear-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .submission-list {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .submission-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .submission-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .submission-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #60a5fa;
+            margin-bottom: 0.5rem;
+        }
+        
+        .submission-time {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.875rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .stats {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .stats-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #60a5fa;
+        }
+        
+        .stats-label {
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 0.5rem;
+        }
+        
+        .empty-state .nav-link {
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="history-container">
+        <div class="navigation">
+            <a href="{{ url_for('index') }}" class="nav-link">← Back to Home</a>
+        </div>
+        
+        <div class="history-header">
+            <h1>Submission History</h1>
+            {% if submissions %}
+            <form method="POST" action="{{ url_for('clear_history') }}" 
+                  onsubmit="return confirm('Are you sure you want to clear all submission history?')">
+                <button type="submit" class="clear-btn">Clear History</button>
+            </form>
+            {% endif %}
+        </div>
+        
+        {% if submissions %}
+        <div class="stats">
+            <div class="stats-number">{{ submissions|length }}</div>
+            <div class="stats-label">Total Submissions</div>
+        </div>
+        
+        <div class="submission-list">
+            {% for submission in submissions %}
+            <div class="submission-item">
+                <div class="submission-name">{{ submission.name }}</div>
+                <div class="submission-time">{{ submission.formatted_time }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">📝</div>
+            <h3>No submissions yet</h3>
+            <p>Submit your first name on the home page to see it appear here!</p>
+            <a href="{{ url_for('index') }}" class="nav-link">Go to Home Page</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Add some interactive feedback
+        document.addEventListener('DOMContentLoaded', function() {
+            const submissionItems = document.querySelectorAll('.submission-item');
+            
+            submissionItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Add a subtle click animation
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

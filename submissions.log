@@ -1,0 +1,60 @@
+2025-07-11 11:13:02,613 - WARNING -  * Debugger is active!
+2025-07-11 11:13:02,618 - INFO -  * Debugger PIN: 552-409-265
+2025-07-11 11:15:00,753 - INFO -  * Detected change in 'C:\\Work\\Github Copilot Demo\\copilot_web_demo\\app.py', reloading
+2025-07-11 11:15:01,263 - WARNING -  * Debugger is active!
+2025-07-11 11:15:01,267 - INFO -  * Debugger PIN: 552-409-265
+2025-07-11 11:15:06,866 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-07-11 11:15:06,866 - INFO - [33mPress CTRL+C to quit[0m
+2025-07-11 11:15:06,868 - INFO -  * Restarting with stat
+2025-07-11 11:15:07,347 - WARNING -  * Debugger is active!
+2025-07-11 11:15:07,352 - INFO -  * Debugger PIN: 552-409-265
+2025-07-11 11:15:12,650 - INFO - 127.0.0.1 - - [11/Jul/2025 11:15:12] "GET /?id=f53f606b-d2e1-4d9b-b77f-3ea6cdd9f9ee&vscodeBrowserReqId=1752228912621 HTTP/1.1" 200 -
+2025-07-11 11:15:12,712 - INFO - 127.0.0.1 - - [11/Jul/2025 11:15:12] "GET /static/style.css HTTP/1.1" 200 -
+2025-07-11 11:15:14,311 - INFO - 127.0.0.1 - - [11/Jul/2025 11:15:14] "GET /?id=f53f606b-d2e1-4d9b-b77f-3ea6cdd9f9ee&vscodeBrowserReqId=1752228914302 HTTP/1.1" 200 -
+2025-07-11 11:15:14,319 - INFO - 127.0.0.1 - - [11/Jul/2025 11:15:14] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-07-11 11:15:23,403 - INFO - New submission: Stefano Sguotti at 2025-07-11T11:15:23.402613
+2025-07-11 11:15:23,404 - INFO - 127.0.0.1 - - [11/Jul/2025 11:15:23] "POST /?id=f53f606b-d2e1-4d9b-b77f-3ea6cdd9f9ee&vscodeBrowserReqId=1752228914302 HTTP/1.1" 200 -
+2025-07-11 11:15:23,421 - INFO - 127.0.0.1 - - [11/Jul/2025 11:15:23] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-07-11 11:15:27,911 - INFO - 127.0.0.1 - - [11/Jul/2025 11:15:27] "GET /history HTTP/1.1" 200 -
+2025-07-11 11:15:27,931 - INFO - 127.0.0.1 - - [11/Jul/2025 11:15:27] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-07-11 11:15:54,572 - INFO -  * Detected change in 'C:\\Work\\Github Copilot Demo\\copilot_web_demo\\test_app.py', reloading
+2025-07-11 11:15:54,597 - INFO -  * Detected change in 'C:\\Work\\Github Copilot Demo\\copilot_web_demo\\test_app.py', reloading
+2025-07-11 11:15:54,613 - INFO -  * Restarting with stat
+2025-07-11 11:15:55,056 - WARNING -  * Debugger is active!
+2025-07-11 11:15:55,061 - INFO -  * Debugger PIN: 552-409-265
+2025-07-11 11:15:55,100 - WARNING -  * Debugger is active!
+2025-07-11 11:15:55,104 - INFO -  * Debugger PIN: 552-409-265
+2025-07-11 11:29:05,978 - INFO - 127.0.0.1 - - [11/Jul/2025 11:29:05] "GET / HTTP/1.1" 200 -
+2025-07-11 11:29:06,091 - INFO - 127.0.0.1 - - [11/Jul/2025 11:29:06] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-07-11 13:09:12,649 - INFO -  * Detected change in 'C:\\Work\\Github Copilot Demo\\copilot_web_demo\\test_app.py', reloading
+2025-07-11 13:09:12,714 - INFO -  * Detected change in 'C:\\Work\\Github Copilot Demo\\copilot_web_demo\\test_app.py', reloading
+2025-07-11 13:09:12,729 - INFO -  * Restarting with stat
+2025-07-11 13:09:13,211 - WARNING -  * Debugger is active!
+2025-07-11 13:09:13,216 - INFO -  * Debugger PIN: 552-409-265
+2025-07-11 13:09:13,249 - WARNING -  * Debugger is active!
+2025-07-11 13:09:13,255 - INFO -  * Debugger PIN: 552-409-265
+2025-07-14 16:05:35,188 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-07-14 16:05:35,188 - INFO - [33mPress CTRL+C to quit[0m
+2025-07-14 16:05:35,190 - INFO -  * Restarting with stat
+2025-07-14 16:05:35,614 - WARNING -  * Debugger is active!
+2025-07-14 16:05:35,617 - INFO -  * Debugger PIN: 552-409-265
+2025-07-14 16:05:37,471 - INFO - 127.0.0.1 - - [14/Jul/2025 16:05:37] "GET /?id=da0d438b-7795-40b0-b185-61433691e55e&vscodeBrowserReqId=1752505537439 HTTP/1.1" 200 -
+2025-07-14 16:05:37,527 - INFO - 127.0.0.1 - - [14/Jul/2025 16:05:37] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-07-14 16:16:54,397 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-07-14 16:16:54,397 - INFO - [33mPress CTRL+C to quit[0m
+2025-07-14 16:16:54,400 - INFO -  * Restarting with stat
+2025-07-14 16:16:54,850 - WARNING -  * Debugger is active!
+2025-07-14 16:16:54,856 - INFO -  * Debugger PIN: 552-409-265
+2025-07-14 16:16:56,213 - INFO - 127.0.0.1 - - [14/Jul/2025 16:16:56] "GET /?id=3c62e0ee-be71-4347-b9bb-dbf89984ed18&vscodeBrowserReqId=1752506216192 HTTP/1.1" 200 -
+2025-07-14 16:16:56,264 - INFO - 127.0.0.1 - - [14/Jul/2025 16:16:56] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-07-14 16:59:47,316 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-07-14 16:59:47,316 - INFO - [33mPress CTRL+C to quit[0m
+2025-07-14 16:59:47,319 - INFO -  * Restarting with stat
+2025-07-14 16:59:47,781 - WARNING -  * Debugger is active!
+2025-07-14 16:59:47,785 - INFO -  * Debugger PIN: 552-409-265
+2025-07-14 16:59:48,762 - INFO - 127.0.0.1 - - [14/Jul/2025 16:59:48] "GET /?id=15f36d21-901e-43ee-80b0-faed108377f4&vscodeBrowserReqId=1752508788680 HTTP/1.1" 200 -
+2025-07-14 16:59:48,834 - INFO - 127.0.0.1 - - [14/Jul/2025 16:59:48] "[36mGET /static/style.css HTTP/1.1[0m" 304 -

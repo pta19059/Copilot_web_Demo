@@ -1,0 +1,7 @@
+Modalità Copilot	Prompt di esempio	Effetto visibile
+
+Ask	    "Explain how form submission is handled in Flask"	Spiegazione codice backend
+Edits	"Add input validation: if name is empty, show an error message on the page"	 Mostra modifiche al form/HTML/backend
+Agent	"Add page that shows submission history and log to file"	Crea nuova route, file di log, update HTML
+Agent	"Add unit tests for empty name input"	Aggiunge test, modifica HTML/backend e test
+

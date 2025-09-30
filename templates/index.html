@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copilot Demo - Modern UI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+    <div class="container">
+        <div class="navigation">
+            <a href="{{ url_for('history') }}" class="nav-link">View Submission History</a>
+        </div>
+        
+        <h1>Copilot Demo</h1>
+        
+        <form method="POST" id="nameForm" novalidate>
+            <div class="form-group">
+                <label for="name">Enter your name:</label>
+                <input 
+                    type="text" 
+                    id="name" 
+                    name="name" 
+                    value="{{ form_name or '' }}" 
+                    placeholder="Your full name"
+                    autocomplete="name"
+                    maxlength="50"
+                >
+                <div class="error-message" id="errorMessage">
+                    Please enter your name.
+                </div>
+            </div>
+            <button type="submit" id="submitBtn">
+                <span class="btn-text">Submit</span>
+            </button>
+        </form>
+        
+        {% if name %}
+            <div class="result">
+                <h3>Hello, {{ name }}! 👋</h3>
+                <p>Welcome to the Copilot Demo experience!</p>
+                <div class="success-note">
+                    ✅ Your submission has been logged and saved to history.
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Enhanced form interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('nameForm');
+            const input = document.getElementById('name');
+            const button = document.getElementById('submitBtn');
+            const btnText = button.querySelector('.btn-text');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Function to show error message
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.classList.add('show');
+                input.style.borderColor = 'rgba(239, 68, 68, 0.8)';
+            }
+            
+            // Function to hide error message
+            function hideError() {
+                errorMessage.classList.remove('show');
+                input.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+            }
+            
+            // Add loading state on form submission
+            form.addEventListener('submit', function(e) {
+                const nameValue = input.value.trim();
+                
+                // Validate name is not empty
+                if (nameValue.length === 0) {
+                    e.preventDefault();
+                    showError('Please enter your name.');
+                    // Add shake animation for invalid input
+                    input.style.animation = 'shake 0.5s ease-in-out';
+                    setTimeout(() => {
+                        input.style.animation = '';
+                        input.focus();
+                    }, 500);
+                    return;
+                }
+                
+                if (nameValue.length >= 2) {
+                    hideError();
+                    button.style.opacity = '0.7';
+                    btnText.textContent = 'Submitting...';
+                    button.disabled = true;
+                } else {
+                    e.preventDefault();
+                    showError('Name must be at least 2 characters long.');
+                    // Add shake animation for invalid input
+                    input.style.animation = 'shake 0.5s ease-in-out';
+                    setTimeout(() => {
+                        input.style.animation = '';
+                        input.focus();
+                    }, 500);
+                }
+            });
+            
+            // Auto-focus input on page load
+            setTimeout(() => {
+                input.focus();
+            }, 100);
+            
+            // Enhanced keyboard support
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const nameValue = input.value.trim();
+                    if (nameValue.length === 0) {
+                        showError('Please enter your name.');
+                        return;
+                    }
+                    if (nameValue.length >= 2) {
+                        hideError();
+                        form.submit();
+                    }
+                }
+            });
+            
+            // Real-time validation feedback
+            input.addEventListener('input', function(e) {
+                const value = e.target.value.trim();
+                if (value.length === 0) {
+                    hideError();
+                } else if (value.length > 0 && value.length < 2) {
+                    input.style.borderColor = 'rgba(239, 68, 68, 0.5)';
+                } else {
+                    hideError();
+                }
+            });
+        });
+        
+        // Add shake animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-8px); }
+                75% { transform: translateX(8px); }
+            }
+            .error-message {
+                color: #ef4444;
+                font-size: 0.875rem;
+                margin-top: 0.5rem;
+                padding: 0.25rem 0;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
