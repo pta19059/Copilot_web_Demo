@@ -12,10 +12,28 @@
     <div class="container">
         <div class="navigation">
             <a href="{{ url_for('history') }}" class="nav-link">View Submission History</a>
+            {% if current_user.is_authenticated %}
+                <span class="user-info">👤 {{ current_user.username }}</span>
+                <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+                <a href="{{ url_for('register') }}" class="nav-link">Register</a>
+            {% endif %}
         </div>
         
         <h1>Copilot Demo</h1>
         
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        {% if current_user.is_authenticated %}
         <form method="POST" id="nameForm" novalidate>
             <div class="form-group">
                 <label for="name">Enter your name:</label>
@@ -45,6 +63,12 @@
                     ✅ Your submission has been logged and saved to history.
                 </div>
             </div>
+        {% endif %}
+        {% else %}
+        <div class="auth-message">
+            <h3>Welcome! 👋</h3>
+            <p>Please <a href="{{ url_for('login') }}">login</a> or <a href="{{ url_for('register') }}">register</a> to submit your name.</p>
+        </div>
         {% endif %}
     </div>
 
