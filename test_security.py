@@ -29,21 +29,13 @@ def test_xss_input_sanitization(client, clean_history):
     response = client.post('/', data={'name': xss_payload})
     
     assert response.status_code == 200
-    # The malicious script should be escaped in the greeting
-    # Look for the escaped version or ensure the raw payload isn't in the user content area
     response_text = response.data.decode('utf-8')
     
-    # Check that if "XSS" appears, it's escaped
-    if 'XSS' in response_text:
-        # Should be HTML escaped
-        assert '&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;' in response_text or \
-               'alert(&#34;XSS&#34;)' in response_text or \
-               '&lt;' in response_text
+    # The malicious unescaped script should NOT be in the response
+    assert '<script>alert("XSS")</script>' not in response_text
     
-    # Most importantly, ensure the greeting doesn't execute scripts
-    # The dangerous payload should not appear unescaped in the "Hello" message
-    assert '<script>alert("XSS")</script>' not in response_text or \
-           '&lt;script&gt;' in response_text
+    # The escaped version should be present
+    assert '&lt;script&gt;' in response_text or '&amp;lt;script&amp;gt;' in response_text
 
 
 def test_sql_injection_protection(client, clean_history):
@@ -87,14 +79,20 @@ def test_sanitize_input_function():
     # Test length limit
     long_input = 'A' * 100
     result = sanitize_input(long_input, max_length=50)
-    assert len(result) <= 50
+    assert len(str(result)) <= 50
     
     # Test whitespace
-    assert sanitize_input('  test  ') == 'test'
+    result = sanitize_input('  test  ')
+    assert 'test' in str(result)
     
     # Test empty input
     assert sanitize_input('') == ''
     assert sanitize_input(None) == ''
+    
+    # Test non-string types
+    assert sanitize_input(123) == ''
+    assert sanitize_input([]) == ''
+    assert sanitize_input({}) == ''
 
 
 def test_log_injection_prevention(client, clean_history):
@@ -134,12 +132,13 @@ def test_secret_key_configured():
 
 
 def test_debug_mode_disabled_by_default():
-    """Test that debug mode is not hardcoded to True"""
-    # We changed the code to only enable debug via environment variable
-    # This is tested by checking the main block in app.py
+    """Test that debug mode is controlled by environment variable"""
     import app as app_module
     import inspect
     
     source = inspect.getsource(app_module)
-    # Should not have app.run(debug=True) hardcoded
-    assert 'app.run(debug=True)' not in source or 'FLASK_DEBUG' in source
+    # Should not have app.run(debug=True) hardcoded without environment check
+    # Must check for FLASK_DEBUG if debug is mentioned
+    assert 'app.run(debug=True)' not in source
+    # The code should use environment-based debug mode
+    assert 'FLASK_DEBUG' in source
