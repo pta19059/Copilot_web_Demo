@@ -101,19 +101,18 @@ def index_post():
     name = request.form.get('name', '')
     
     # Security: Validate and sanitize input
-    # Note: sanitize_input handles stripping, so we don't need to strip here
     if name:
-        # Additional validation
+        # Additional validation on stripped input
         name_stripped = name.strip()
         if len(name_stripped) < 2:
-            sanitized_form_name = sanitize_input(name)
+            sanitized_form_name = sanitize_input(name_stripped)
             return render_template('index.html', form_name=sanitized_form_name, error='Name must be at least 2 characters long')
         elif len(name_stripped) > 50:
-            sanitized_form_name = sanitize_input(name[:50])
+            sanitized_form_name = sanitize_input(name_stripped[:50])
             return render_template('index.html', form_name=sanitized_form_name, error='Name must be 50 characters or less')
         else:
             # Sanitize the input
-            sanitized_name = sanitize_input(name)
+            sanitized_name = sanitize_input(name_stripped)
             # Save the submission to history and log it
             save_submission(sanitized_name)
             return render_template('index.html', name=sanitized_name)

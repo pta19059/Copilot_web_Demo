@@ -1,7 +1,7 @@
 """Security tests for the Flask application"""
 import pytest
-from app import app, sanitize_input, HISTORY_FILE
 import os
+from app import app, sanitize_input, HISTORY_FILE, load_history
 
 
 @pytest.fixture
@@ -62,13 +62,23 @@ def test_input_length_validation(client, clean_history):
     # Too short
     response = client.post('/', data={'name': 'A'})
     assert response.status_code == 200
-    # Should show error or not process
+    # Should show error message
+    assert b'Name must be at least 2 characters' in response.data
+    
+    # Check that short name was not saved
+    history = load_history()
+    assert len(history) == 0
     
     # Too long
     long_name = 'A' * 100
     response = client.post('/', data={'name': long_name})
     assert response.status_code == 200
-    # Should be truncated or show error
+    # Should show error or truncate
+    assert b'Name must be 50 characters or less' in response.data
+    
+    # Check that long name was not saved
+    history = load_history()
+    assert len(history) == 0
 
 
 def test_sanitize_input_function():
@@ -133,12 +143,31 @@ def test_secret_key_configured():
 
 def test_debug_mode_disabled_by_default():
     """Test that debug mode is controlled by environment variable"""
-    import app as app_module
-    import inspect
+    # Save original environment
+    original_debug = os.environ.get('FLASK_DEBUG')
     
-    source = inspect.getsource(app_module)
-    # Should not have app.run(debug=True) hardcoded without environment check
-    # Must check for FLASK_DEBUG if debug is mentioned
-    assert 'app.run(debug=True)' not in source
-    # The code should use environment-based debug mode
-    assert 'FLASK_DEBUG' in source
+    try:
+        # Test with debug disabled (default)
+        if 'FLASK_DEBUG' in os.environ:
+            del os.environ['FLASK_DEBUG']
+        
+        # Reload the app module to test configuration
+        import importlib
+        import app as app_module
+        importlib.reload(app_module)
+        
+        # Check that debug is not enabled by default
+        # The app should be configured to not use debug mode unless explicitly set
+        import inspect
+        source = inspect.getsource(app_module)
+        
+        # Verify the code checks for FLASK_DEBUG environment variable
+        assert 'FLASK_DEBUG' in source
+        assert 'app.run(debug=True)' not in source
+        
+    finally:
+        # Restore original environment
+        if original_debug is not None:
+            os.environ['FLASK_DEBUG'] = original_debug
+        elif 'FLASK_DEBUG' in os.environ:
+            del os.environ['FLASK_DEBUG']

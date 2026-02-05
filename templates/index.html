@@ -29,9 +29,15 @@
                     autocomplete="name"
                     maxlength="50"
                 >
+                {% if error %}
+                <div class="error-message show">
+                    {{ error }}
+                </div>
+                {% else %}
                 <div class="error-message" id="errorMessage">
                     Please enter your name.
                 </div>
+                {% endif %}
             </div>
             <button type="submit" id="submitBtn">
                 <span class="btn-text">Submit</span>
