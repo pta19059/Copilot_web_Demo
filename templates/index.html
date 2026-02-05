@@ -17,6 +17,7 @@
         <h1>Copilot Demo</h1>
         
         <form method="POST" id="nameForm" novalidate>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <div class="form-group">
                 <label for="name">Enter your name:</label>
                 <input 
@@ -28,9 +29,15 @@
                     autocomplete="name"
                     maxlength="50"
                 >
+                {% if error %}
+                <div class="error-message show">
+                    {{ error }}
+                </div>
+                {% else %}
                 <div class="error-message" id="errorMessage">
                     Please enter your name.
                 </div>
+                {% endif %}
             </div>
             <button type="submit" id="submitBtn">
                 <span class="btn-text">Submit</span>
@@ -39,7 +46,7 @@
         
         {% if name %}
             <div class="result">
-                <h3>Hello, {{ name }}! 👋</h3>
+                <h3>Hello, {{ name | e }}! 👋</h3>
                 <p>Welcome to the Copilot Demo experience!</p>
                 <div class="success-note">
                     ✅ Your submission has been logged and saved to history.

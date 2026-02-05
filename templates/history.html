@@ -138,6 +138,7 @@
             {% if submissions %}
             <form method="POST" action="{{ url_for('clear_history') }}" 
                   onsubmit="return confirm('Are you sure you want to clear all submission history?')">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                 <button type="submit" class="clear-btn">Clear History</button>
             </form>
             {% endif %}
@@ -152,8 +153,8 @@
         <div class="submission-list">
             {% for submission in submissions %}
             <div class="submission-item">
-                <div class="submission-name">{{ submission.name }}</div>
-                <div class="submission-time">{{ submission.formatted_time }}</div>
+                <div class="submission-name">{{ submission.name | e }}</div>
+                <div class="submission-time">{{ submission.formatted_time | e }}</div>
             </div>
             {% endfor %}
         </div>
