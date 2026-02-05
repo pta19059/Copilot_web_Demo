@@ -1,10 +1,19 @@
 from flask import Flask, render_template, request, redirect, url_for # type: ignore
+from flask_wtf.csrf import CSRFProtect # type: ignore
+from markupsafe import escape # type: ignore
 import logging
 import json
 import os
+import secrets
 from datetime import datetime
 
 app = Flask(__name__)
+
+# Security: Set a secret key for session management and CSRF protection
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or secrets.token_hex(32)
+
+# Security: Enable CSRF protection
+csrf = CSRFProtect(app)
 
 # Configure logging
 logging.basicConfig(
@@ -29,6 +38,28 @@ def load_history():
             return []
     return []
 
+def sanitize_input(text, max_length=50):
+    """Sanitize user input to prevent security issues"""
+    if not text or not isinstance(text, str):
+        return ''
+    
+    # Strip whitespace
+    text = text.strip()
+    
+    # Limit length
+    text = text[:max_length]
+    
+    # Remove any HTML/script tags (basic sanitization)
+    # The template will also escape output for defense in depth
+    dangerous_chars = ['<', '>', '"', "'", '&']
+    for char in dangerous_chars:
+        if char in text:
+            # If dangerous characters are found, escape them
+            text = escape(text)
+            break
+    
+    return text
+
 def save_submission(name):
     """Save a submission to history and log it"""
     timestamp = datetime.now().isoformat()
@@ -51,31 +82,62 @@ def save_submission(name):
     except IOError as e:
         app.logger.error(f"Failed to save submission history: {e}")
     
-    # Log the submission
-    app.logger.info(f"New submission: {name} at {timestamp}")
+    # Log the submission (sanitize for log injection prevention)
+    safe_name = name.replace('\n', ' ').replace('\r', ' ')
+    app.logger.info(f"New submission: {safe_name} at {timestamp}")
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    """Main page with security headers"""
+    response = app.make_response(render_template('index.html'))
+    # Security headers
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    response.headers['Content-Security-Policy'] = "default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com"
+    return response
 
 @app.route('/', methods=['POST'])
 def index_post():
+    """Handle form submission with input validation and sanitization"""
     name = request.form.get('name', '').strip()
     
+    # Security: Validate and sanitize input
     if name:
-        # Save the submission to history and log it
-        save_submission(name)
-        return render_template('index.html', name=name)
+        # Additional validation
+        if len(name) < 2:
+            response = app.make_response(render_template('index.html', form_name=name, error='Name must be at least 2 characters long'))
+        elif len(name) > 50:
+            response = app.make_response(render_template('index.html', form_name=name[:50], error='Name must be 50 characters or less'))
+        else:
+            # Sanitize the input
+            sanitized_name = sanitize_input(name)
+            # Save the submission to history and log it
+            save_submission(sanitized_name)
+            response = app.make_response(render_template('index.html', name=sanitized_name))
     else:
-        return render_template('index.html', form_name=request.form.get('name', ''))
+        response = app.make_response(render_template('index.html', form_name=request.form.get('name', '')))
+    
+    # Security headers
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    response.headers['Content-Security-Policy'] = "default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com"
+    return response
 
 @app.route('/history')
 def history():
-    """Display submission history"""
+    """Display submission history with security headers"""
     submissions = load_history()
     # Reverse to show most recent first
     submissions.reverse()
-    return render_template('history.html', submissions=submissions)
+    response = app.make_response(render_template('history.html', submissions=submissions))
+    # Security headers
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    response.headers['Content-Security-Policy'] = "default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com"
+    return response
 
 @app.route('/clear-history', methods=['POST'])
 def clear_history():
@@ -90,4 +152,6 @@ def clear_history():
     return redirect(url_for('history'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Security: Only enable debug mode if explicitly set via environment variable
+    debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
+    app.run(debug=debug_mode)
